@@ -1,4 +1,5 @@
 from __future__ import annotations
+import copy
 import math
 from typing import Any, Callable, List, Union
 
@@ -9,6 +10,12 @@ class Vector:
 
     def __str__(self) -> str:
         return str(self.components)
+
+    def __copy__(self) -> Vector:
+        return Vector(self.components)
+
+    def __deepcopy__(self, memo) -> Vector:
+        return Vector(copy.deepcopy(self.components, memo))
 
     def __len__(self) -> int:
         return len(self.components)
@@ -42,6 +49,12 @@ class Vector:
         if len(self) != len(other):
             raise ValueError("Vectors must be of the same dimension to compare")
         return self.magnitude != other.magnitude()
+
+    def __getitem__(self, key) -> float:
+        return self.components[key]
+
+    def __setitem__(self, key, value) -> None:
+        self.components[key] = value
 
     def __sub__(self, other: Vector) -> Vector:
         if len(self) != len(other):
@@ -80,3 +93,15 @@ class Vector:
         return math.degrees(
             math.acos((self * other) / (self.magnitude() * other.magnitude()))
         )
+
+    # only for 2D for now
+    def rotate(self, angle: float) -> Vector:
+        if len(self) != 2:
+            raise ValueError("Rotation is not defined for higher dimensional vector")
+        angle = math.radians(angle)
+        return Vector(
+            [
+                self[0] * math.cos(angle) + self[1] * math.sin(angle),
+                -self[0] * math.sin(angle) + self[1] * math.cos(angle),
+            ]
+        ) # floating point error but whatever
