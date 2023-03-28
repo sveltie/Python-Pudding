@@ -49,8 +49,12 @@ class TestVector(unittest.TestCase):
         self.assertAlmostEqual(self.v.angle(self.w), theta)
 
     def test_rotation(self):
-        a = Vector([2, 4])
-        print(a.rotate(90))
+        self.assertEqual(
+            Vector([0, 1]).rotate(90), Vector([-1, 0]), "should be [-1, 0]"
+        )  # 2D
+        self.assertEqual(
+            self.v.rotate(90, axis="x"), Vector([1, -3, 2]), "should be [1, -3, 2]"
+        )  # 3D
 
 
 if __name__ == "__main__":
